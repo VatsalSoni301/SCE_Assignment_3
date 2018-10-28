@@ -3,16 +3,41 @@ Python Shell
 Command Syntex
 
 1  ls 
+   ex:- ls
+
 2  ls path
+   ex:- ls /home/vatsal/Downloads
+
 3  pwd
+   ex:- pwd
+
 4  cd path 
+   ex:- cd /home/vatsal/Downloads
+
 5  touch file1 file2 ...
+   ex:- touch abc.txt def.txt
+
 6  head file1 file2 ...
+   ex:- head abc.txt def.txt
+
 7  tail file1 file2 ...
+   ex:- tail abc.txt def.txt
+
 8  grep "pattern" <<< "text"
+   ex:- grep "abc" <<< "abc def abcdef"
+
 9  sed "pattern/newpattern" <<< "text"
+   ex:- sed "abc/def" <<< "abc def abcdef"
+
 10  tr "string" "newstring"
 	- Then enter text to replace
 	- $ to exit from tr command
+	- ex:- tr abc def
+	- input:- abcxyz abc
+	- output:- defxyz def
+	- $ to exit
 
-11 exit
+11 diff file1 file2
+   ex:- diff abc.txt def.txt
+
+12 exit
