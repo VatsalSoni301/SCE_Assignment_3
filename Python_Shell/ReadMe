@@ -1,0 +1,18 @@
+Python Shell
+
+Command Syntex
+
+1  ls 
+2  ls path
+3  pwd
+4  cd path 
+5  touch file1 file2 ...
+6  head file1 file2 ...
+7  tail file1 file2 ...
+8  grep "pattern" <<< "text"
+9  sed "pattern/newpattern" <<< "text"
+10  tr "string" "newstring"
+	- Then enter text to replace
+	- $ to exit from tr command
+
+11 exit
