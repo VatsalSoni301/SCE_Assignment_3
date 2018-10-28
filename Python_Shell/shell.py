@@ -1,6 +1,6 @@
 import os
 import sys
-import difflib
+#import difflib
 
 print "Welcome to Python Shell"
 
@@ -84,15 +84,15 @@ def grep(command):
         ps = command.split("<<<")
         ps[0] = ps[0][2:len(ps[0])-2]
         ps[1] = ps[1][2:len(ps[1])-1]
-        f=0
+        f = 0
         while ps[1].find(ps[0]) != -1:
             x = ps[1].find(ps[0])
             sys.stdout.write(ps[1][0:x])
             prRed(ps[1][x:x+len(ps[0])])
             x = x+len(ps[0])
             ps[1] = ps[1][x:]
-            f=1
-        if f==1:
+            f = 1
+        if f == 1:
             sys.stdout.write(ps[1])
         print
     except:
@@ -188,7 +188,23 @@ def tr(command):
 
 
 def sed(command):
-    print "Sed Command"
+    command = command[3:]
+    try:
+        ps = command.split("<<<")
+        ps[0] = ps[0][2:len(ps[0])-2]
+        ps[1] = ps[1][2:len(ps[1])-1]
+        pattern = ps[0].split("/")
+        while ps[1].find(pattern[0]) != -1:
+            x = ps[1].find(pattern[0])
+            sys.stdout.write(ps[1][0:x])
+            sys.stdout.write(pattern[1])
+            x = x+len(pattern[0])
+            ps[1] = ps[1][x:]
+
+        sys.stdout.write(ps[1])
+        print
+    except:
+        print "Invalid Syntex"
 
 
 def diff(command):
@@ -206,14 +222,27 @@ def diff(command):
                 with open(command[2]) as f:
                     lines1 = f.readlines()
 
-                getdiff = list(set(lines) - set(lines1))
-                getdiff1 = list(set(lines1) - set(lines))
                 print "FileName----", command[1]
-                for i in getdiff:
-                    sys.stdout.write(i)
+
+                for item in lines:
+                    if item not in lines1:
+                        sys.stdout.write(item)
+
                 print "FileName----", command[2]
-                for i in getdiff1:
-                    sys.stdout.write(i)
+
+                for item in lines1:
+                    if item not in lines:
+                        sys.stdout.write(item)
+                    
+            
+                # getdiff = list(set(lines) - set(lines1))
+                # getdiff1 = list(set(lines1) - set(lines))
+                # print "FileName----", command[1]
+                # for i in getdiff:
+                #     sys.stdout.write(i)
+                # print "FileName----", command[2]
+                # for i in getdiff1:
+                #     sys.stdout.write(i)
             else:
                 if os.access(command[1], os.R_OK):
                     print "Second file does not have read permission"
@@ -258,7 +287,7 @@ while 1:
     elif command[0] == "tr":
         tr(command)
     elif command[0] == "sed":
-        sed(command)
+        sed(user_command)
     elif command[0] == "diff":
         diff(command)
     elif command[0] == "exit":
