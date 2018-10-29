@@ -3,11 +3,19 @@ import os
 
 class Products:
 
-    __id = 0
     def __init__(self,Name,Group,Subgroup,Price):
         
-        Products.__id=Products.__id+1
-        self.__id=Products.__id
+        if os.path.isfile("product.pickle"):
+            try:
+                pickle_in = open("product.pickle","rb")
+                list_of_products = pickle.load(pickle_in)
+                pickle_in.close()
+                ids = list_of_products.keys()
+                self.__id = max(ids) + 1
+            except:
+                self.__id=1
+        else:
+            self.__id=1
         self._Name=Name
         self._Group=Group
         self._Subgroup=Subgroup
@@ -40,10 +48,8 @@ class Products:
 
 class Admin:
 
-    __id = 0
     def __init__(self,Name):
-        Admin. __id =Admin. __id+1
-        self.__id=Admin.__id
+        self.__id=1
         self.__Name=Name
 
     def getId(self):
@@ -198,10 +204,18 @@ class Admin:
 
 class Customer:
     
-    __id = 0
     def __init__(self,Name,Address,PhnNo):
-        Customer.__id =Customer. __id + 1
-        self.__id=Customer.__id
+        if os.path.isfile("customer.pickle"):
+            try:
+                pickle_in = open("customer.pickle","rb")
+                list_of_customers = pickle.load(pickle_in)
+                pickle_in.close()
+                ids = list_of_customers.keys()
+                self.__id=max(ids)+1
+            except:
+                self.__id=1
+        else:
+            self.__id=1
         self._Name=Name
         self._Address=Address
         self._PhnNo=PhnNo
@@ -538,10 +552,8 @@ class Customer:
 
 class Cart:
     
-    __id = 0
     def __init__(self,NumberOfProducts,Total,ProductList,customer_id):
-        Cart.__id = Cart.__id + 1
-        self.__id = Cart.__id
+        self.__id=1
         self.customer_id=customer_id
         self._NumberOfProducts = NumberOfProducts
         self._Total = Total
@@ -570,10 +582,8 @@ class Cart:
 
 class Payment:
     
-    __id=0
     def __init__(self,Name,CardType,CardNo):
-        Payment.__id = Payment.__id + 1
-        self.__id = Payment.__id
+        self.__id=1
         self.Name = Name
         self.__CardType = CardType
         self.__CardNo = CardNo
