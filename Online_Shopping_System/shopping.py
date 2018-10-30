@@ -351,7 +351,7 @@ class Customer:
                     if x:
                         print "************** Cart ***********************"
                         for i in x:
-                            print i.getId(),i.getName(),i.getGroup(),i.getSubgroup()
+                            print i.getId(),i.getName(),i.getGroup(),i.getSubgroup(),i.getPrice()
                         print "Total = ",ct.getTotal()
                         print "************** END ***********************"
                     else:
@@ -497,16 +497,28 @@ class Customer:
                                 listname = listname +","+ pname.getName()
                         py = Payment(listname,CT,CNO)
                         if os.path.isfile("payment.pickle"):
-                            pickle_in = open("payment.pickle","rb")
-                            list_pay = pickle.load(pickle_in)
-                            pickle_in.close()
-                            paylist  = list_pay[self.__id]
-                            paylist.append(py)
-                            list_pay[self.__id] = paylist
-                            pickle_in = open("payment.pickle","wb")
-                            pickle.dump(list_pay,pickle_in)
-                            pickle_in.close()
-                            print "Payment Completed"
+                        	try:
+	                            pickle_in = open("payment.pickle","rb")
+	                            list_pay = pickle.load(pickle_in)
+	                            pickle_in.close()
+	                            paylist  = list_pay[self.__id]
+	                            paylist.append(py)
+	                            list_pay[self.__id] = paylist
+	                            pickle_in = open("payment.pickle","wb")
+	                            pickle.dump(list_pay,pickle_in)
+	                            pickle_in.close()
+	                            print "Payment Completed"
+	                            
+	                        except:
+			                    	pay = []
+			                        pay.append(py)
+			                        list_pay = {1:pay}
+			                        list_pay.clear()
+			                        list_pay[self.__id] = pay
+			                        pickle_in = open("payment.pickle","wb")
+			                        pickle.dump(list_pay,pickle_in)
+			                        pickle_in.close()
+			                        print "Payment Completed"
                         else:
                             pay = []
                             pay.append(py)
