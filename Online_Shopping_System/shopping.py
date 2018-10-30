@@ -248,11 +248,11 @@ class Customer:
                 list_of_products = pickle.load(pickle_in)
                 pickle_in.close()
                 try:
-                    id = int(raw_input("Enter id of a product you want to buy"))
-                    if id in list_of_products:
-                        self.MakePayment(id,list_of_products)
-                    else:
-                        print "ID does not exist"
+	                id = int(raw_input("Enter id of a product you want to buy"))
+	                if id in list_of_products:
+	                    self.MakePayment(id,list_of_products)
+	                else:
+	                    print "ID does not exist"
                 except:
                     print "Please Enter Valid ID"
             except:
@@ -334,7 +334,7 @@ class Customer:
                         f=1
                         break
                 if f==1:
-                    DeleteFromCart(id)
+                    self.DeleteFromCart(id)
             except:
                 pass
 
@@ -667,98 +667,98 @@ while 1:
     print "3 for Guest"
     print "0 for exit"
     try:
-        choice = int(raw_input())
+	    choice = int(raw_input())
 
-        if choice == 1:
-            name = raw_input("Enter Admin Name")
-            a = Admin(name)
-            while 1:
-                print "1 to AddProduct"
-                print "2 to ViewProduct"
-                print "3 to DeleteProduct"
-                print "4 to ModifyProduct"
-                print "0 to exit"
-                # print "5 to MakeShipment"
-                # print "6 to ConfirmDelivery"
-                admin_choice = int(raw_input())
+	    if choice == 1:
+	        name = raw_input("Enter Admin Name")
+	        a = Admin(name)
+	        while 1:
+	            print "1 to AddProduct"
+	            print "2 to ViewProduct"
+	            print "3 to DeleteProduct"
+	            print "4 to ModifyProduct"
+	            print "0 to exit"
+	            # print "5 to MakeShipment"
+	            # print "6 to ConfirmDelivery"
+	            admin_choice = int(raw_input())
 
-                if admin_choice == 1:
-                    a.AddProduct()
-                elif admin_choice == 2:
-                    a.ViewProduct()
-                elif admin_choice == 3:
-                    a.ViewProduct()
-                    a.DeleteProduct()
-                elif admin_choice == 4:
-                    a.ViewProduct()
-                    a.ModifyProduct()
-                elif admin_choice == 0:
-                    break
-                else:
-                    print "Please make valid choice"
+	            if admin_choice == 1:
+	                a.AddProduct()
+	            elif admin_choice == 2:
+	                a.ViewProduct()
+	            elif admin_choice == 3:
+	                a.ViewProduct()
+	                a.DeleteProduct()
+	            elif admin_choice == 4:
+	                a.ViewProduct()
+	                a.ModifyProduct()
+	            elif admin_choice == 0:
+	                break
+	            else:
+	                print "Please make valid choice"
 
-        elif choice == 2:
-            id = int(raw_input("Enter Customer Id"))
-            pickle_in = open("customer.pickle","rb")
-            list_of_customers = pickle.load(pickle_in)
-            pickle_in.close()
-            c = list_of_customers[id]
-            if c:
-                while 1:
-                    print "1 to BuyProduct"
-                    print "2 to ViewProduct"
-                    print "3 to AddToCart"
-                    print "4 to DeleteFromCart"
-                    print "5 to BuyCart"
-                    print "6 to see history"
-                    print "7 to ViewCart"
-                    #print "7 to MakePayment"
-                    print "0 to exit"
-                    customer_choice = int(raw_input())
-                    if customer_choice == 1:
-                        c.ViewProduct()
-                        c.BuyProduct()
-                    elif customer_choice == 2:
-                        c.ViewProduct()
-                    elif customer_choice == 3:
-                        c.ViewProduct()
-                        c.AddToCart()
-                    elif customer_choice == 4:
-                        c.ViewCart()
-                        c.DeleteFromCart()
-                    elif customer_choice == 5:
-                        c.ViewCart()
-                        c.BuyCart()
-                    elif customer_choice == 6:
-                        c.history()
-                    elif customer_choice == 7:
-                        c.ViewCart()
-                    elif customer_choice == 0:
-                        break
-                    else:
-                        print "Please make valid choice"
-            else:
-                print "Unauthorized Customer"
+	    elif choice == 2:
+	        id = int(raw_input("Enter Customer Id"))
+	        pickle_in = open("customer.pickle","rb")
+	        list_of_customers = pickle.load(pickle_in)
+	        pickle_in.close()
+	        c = list_of_customers[id]
+	        if c:
+	            while 1:
+	                print "1 to BuyProduct"
+	                print "2 to ViewProduct"
+	                print "3 to AddToCart"
+	                print "4 to DeleteFromCart"
+	                print "5 to BuyCart"
+	                print "6 to see history"
+	                print "7 to ViewCart"
+	                #print "7 to MakePayment"
+	                print "0 to exit"
+	                customer_choice = int(raw_input())
+	                if customer_choice == 1:
+	                    c.ViewProduct()
+	                    c.BuyProduct()
+	                elif customer_choice == 2:
+	                    c.ViewProduct()
+	                elif customer_choice == 3:
+	                    c.ViewProduct()
+	                    c.AddToCart()
+	                elif customer_choice == 4:
+	                    c.ViewCart()
+	                    c.DeleteFromCart()
+	                elif customer_choice == 5:
+	                    c.ViewCart()
+	                    c.BuyCart()
+	                elif customer_choice == 6:
+	                    c.history()
+	                elif customer_choice == 7:
+	                    c.ViewCart()
+	                elif customer_choice == 0:
+	                    break
+	                else:
+	                    print "Please make valid choice"
+	        else:
+	            print "Unauthorized Customer"
 
-        elif choice == 3:
-            g = Guest()
-            while 1:
-                print "1 to ViewProducts"
-                print "2 to GetRegistered"
-                print "0 to exit"
-                guest_choice = int(raw_input())
-                if guest_choice == 1:
-                    g.ViewProducts()
-                elif guest_choice == 2:
-                    g.GetRegistered()
-                    break
-                elif guest_choice == 0:
-                    break
-                else:
-                    print "Please make valid choice"
-        elif choice == 0:
-            break
-        else:
-            print "Please make valid choice"
+	    elif choice == 3:
+	        g = Guest()
+	        while 1:
+	            print "1 to ViewProducts"
+	            print "2 to GetRegistered"
+	            print "0 to exit"
+	            guest_choice = int(raw_input())
+	            if guest_choice == 1:
+	                g.ViewProducts()
+	            elif guest_choice == 2:
+	                g.GetRegistered()
+	                break
+	            elif guest_choice == 0:
+	                break
+	            else:
+	                print "Please make valid choice"
+	    elif choice == 0:
+	        break
+	    else:
+	        print "Please make valid choice"
     except:
         print "Please make valid choice"
