@@ -3,7 +3,7 @@ import os
 
 class Products:
 
-    def __init__(self,Name,Group,Subgroup,Price):
+    def __init__(self,Name,Group,Subgroup,Price,Quantity):
         
         if os.path.isfile("product.pickle"):
             try:
@@ -20,6 +20,7 @@ class Products:
         self._Group=Group
         self._Subgroup=Subgroup
         self._Price=Price
+        self._Quantity=Quantity
 
     def getId(self):
         return self.__id
@@ -45,6 +46,11 @@ class Products:
         return self._Price
     def setPrice(self,Price):
         self._Price=Price
+
+    def getQuantity(self):
+        return self._Quantity
+    def setQuantity(self,Quantity):
+        self._Quantity=Quantity
 
 class Admin:
 
@@ -73,7 +79,7 @@ class Admin:
                 if list_of_products:
                     print "**************** Product-List *************************"
                     for i in list_of_products:
-                        print list_of_products[i].getId(),list_of_products[i].getName(),list_of_products[i].getPrice(),list_of_products[i].getGroup(),list_of_products[i].getSubgroup()
+                        print list_of_products[i].getId(),list_of_products[i].getName(),list_of_products[i].getPrice(),list_of_products[i].getGroup(),list_of_products[i].getSubgroup(),list_of_products[i].getQuantity()
 
                     print "**************** END *************************"
 
@@ -91,8 +97,9 @@ class Admin:
             Price = int(raw_input("Enter Price"))
             Group = raw_input("Enter Group")
             Subgroup = raw_input("Enter Subgroup")
+            Quantity = int(raw_input("Enter Quantity"))
 
-            p = Products(Name,Group,Subgroup,Price)
+            p = Products(Name,Group,Subgroup,Price,Quantity)
 
             list_of_products = {1:Products}
             list_of_products.clear()
@@ -169,12 +176,14 @@ class Admin:
                                 Price = int(raw_input("Enter Price"))
                                 Group = raw_input("Enter Group")
                                 Subgroup = raw_input("Enter Subgroup")
+                                Quantity = int(raw_input("Enter Quantity"))
                                 #p = Products(Name,Group,Subgroup,Price)
                                 p=list_of_products[id]
                                 p.setName(Name)
                                 p.setPrice(Price)
                                 p.setGroup(Group)
                                 p.setSubgroup(Subgroup)
+                                p.setQuantity(Quantity)
                                 list_of_products[id]=p
                                 pickle_in = open("product.pickle","wb")
                                 pickle.dump(list_of_products,pickle_in)
@@ -248,11 +257,24 @@ class Customer:
                 list_of_products = pickle.load(pickle_in)
                 pickle_in.close()
                 try:
-	                id = int(raw_input("Enter id of a product you want to buy"))
-	                if id in list_of_products:
-	                    self.MakePayment(id,list_of_products)
-	                else:
-	                    print "ID does not exist"
+                    id = int(raw_input("Enter id of a product you want to buy"))
+                    if id in list_of_products:
+                            qu = int(raw_input("Enter quantity"))
+                            p=list_of_products[id]
+                            quant=p.getQuantity()
+                            if quant>qu:
+                                    quant=quant-qu
+                                    p=list_of_products[id]
+                                    p.setQuantity(quant)
+                                    list_of_products[id]=p
+                                    pickle_in = open("product.pickle","wb")
+                                    pickle.dump(list_of_products,pickle_in)
+                                    pickle_in.close()
+                                    self.MakePayment(id,list_of_products,qu)
+                            else:
+                                print "Out Of Stock"
+                    else:
+                        print "ID does not exist"
                 except:
                     print "Please Enter Valid ID"
             except:
@@ -271,7 +293,7 @@ class Customer:
                 if list_of_products:
                     print "**************** Product-List *************************"
                     for i in list_of_products:
-                        print list_of_products[i].getId(),list_of_products[i].getName(),list_of_products[i].getPrice(),list_of_products[i].getGroup(),list_of_products[i].getSubgroup()
+                        print list_of_products[i].getId(),list_of_products[i].getName(),list_of_products[i].getPrice(),list_of_products[i].getGroup(),list_of_products[i].getSubgroup(),list_of_products[i].getQuantity()
 
                     print "**************** END *************************"
 
@@ -282,12 +304,12 @@ class Customer:
         else:
             print "No Product Found"
 
-    def MakePayment(self,id,list_of_products):
-        print "Please pay ",list_of_products[id].getPrice()," Amount"
+    def MakePayment(self,id,list_of_products,qu):
+        print "Please pay ",list_of_products[id].getPrice()*qu," Amount"
         CT = raw_input("Enter CardType")
         CNO = raw_input("Enter CardNo")
 
-        py = Payment(list_of_products[id].getName(),CT,CNO)
+        py = Payment(list_of_products[id].getName(),CT,CNO,self.__id)
         if os.path.isfile("payment.pickle"):
             try:
                 pickle_in = open("payment.pickle","rb")
@@ -495,7 +517,7 @@ class Customer:
                                 listname = pname.getName()
                             else:
                                 listname = listname +","+ pname.getName()
-                        py = Payment(listname,CT,CNO)
+                        py = Payment(listname,CT,CNO,self.__id)
                         if os.path.isfile("payment.pickle"):
                         	try:
 	                            pickle_in = open("payment.pickle","rb")
@@ -594,11 +616,12 @@ class Cart:
 
 class Payment:
     
-    def __init__(self,Name,CardType,CardNo):
+    def __init__(self,Name,CardType,CardNo,Cid):
         self.__id=1
         self.Name = Name
         self.__CardType = CardType
         self.__CardNo = CardNo
+        self.__Cid = Cid
 
     def getId(self):
         return self.__id
@@ -620,6 +643,11 @@ class Payment:
     def setCardNo(self,CardNo):
         self.__CardNo=CardNo
 
+    def getCid(self):
+        return self.__Cid
+    def setCid(self,Cid):
+        self.__Cid=Cid
+
 class Guest:
     
     def ViewProducts(self):
@@ -633,7 +661,7 @@ class Guest:
                 if list_of_products:
                     print "**************** Product-List *************************"
                     for i in list_of_products:
-                        print list_of_products[i].getId(),list_of_products[i].getName(),list_of_products[i].getPrice(),list_of_products[i].getGroup(),list_of_products[i].getSubgroup()
+                        print list_of_products[i].getId(),list_of_products[i].getName(),list_of_products[i].getPrice(),list_of_products[i].getGroup(),list_of_products[i].getSubgroup(),list_of_products[i].getQuantity()
 
                     print "**************** END *************************"
 
@@ -679,98 +707,98 @@ while 1:
     print "3 for Guest"
     print "0 for exit"
     try:
-	    choice = int(raw_input())
+        choice = int(raw_input())
 
-	    if choice == 1:
-	        name = raw_input("Enter Admin Name")
-	        a = Admin(name)
-	        while 1:
-	            print "1 to AddProduct"
-	            print "2 to ViewProduct"
-	            print "3 to DeleteProduct"
-	            print "4 to ModifyProduct"
-	            print "0 to exit"
-	            # print "5 to MakeShipment"
-	            # print "6 to ConfirmDelivery"
-	            admin_choice = int(raw_input())
+        if choice == 1:
+            name = raw_input("Enter Admin Name")
+            a = Admin(name)
+            while 1:
+                print "1 to AddProduct"
+                print "2 to ViewProduct"
+                print "3 to DeleteProduct"
+                print "4 to ModifyProduct"
+                print "0 to exit"
+                # print "5 to MakeShipment"
+                # print "6 to ConfirmDelivery"
+                admin_choice = int(raw_input())
 
-	            if admin_choice == 1:
-	                a.AddProduct()
-	            elif admin_choice == 2:
-	                a.ViewProduct()
-	            elif admin_choice == 3:
-	                a.ViewProduct()
-	                a.DeleteProduct()
-	            elif admin_choice == 4:
-	                a.ViewProduct()
-	                a.ModifyProduct()
-	            elif admin_choice == 0:
-	                break
-	            else:
-	                print "Please make valid choice"
+                if admin_choice == 1:
+                    a.AddProduct()
+                elif admin_choice == 2:
+                    a.ViewProduct()
+                elif admin_choice == 3:
+                    a.ViewProduct()
+                    a.DeleteProduct()
+                elif admin_choice == 4:
+                    a.ViewProduct()
+                    a.ModifyProduct()
+                elif admin_choice == 0:
+                    break
+                else:
+                    print "Please make valid choice"
 
-	    elif choice == 2:
-	        id = int(raw_input("Enter Customer Id"))
-	        pickle_in = open("customer.pickle","rb")
-	        list_of_customers = pickle.load(pickle_in)
-	        pickle_in.close()
-	        c = list_of_customers[id]
-	        if c:
-	            while 1:
-	                print "1 to BuyProduct"
-	                print "2 to ViewProduct"
-	                print "3 to AddToCart"
-	                print "4 to DeleteFromCart"
-	                print "5 to BuyCart"
-	                print "6 to see history"
-	                print "7 to ViewCart"
-	                #print "7 to MakePayment"
-	                print "0 to exit"
-	                customer_choice = int(raw_input())
-	                if customer_choice == 1:
-	                    c.ViewProduct()
-	                    c.BuyProduct()
-	                elif customer_choice == 2:
-	                    c.ViewProduct()
-	                elif customer_choice == 3:
-	                    c.ViewProduct()
-	                    c.AddToCart()
-	                elif customer_choice == 4:
-	                    c.ViewCart()
-	                    c.DeleteFromCart()
-	                elif customer_choice == 5:
-	                    c.ViewCart()
-	                    c.BuyCart()
-	                elif customer_choice == 6:
-	                    c.history()
-	                elif customer_choice == 7:
-	                    c.ViewCart()
-	                elif customer_choice == 0:
-	                    break
-	                else:
-	                    print "Please make valid choice"
-	        else:
-	            print "Unauthorized Customer"
+        elif choice == 2:
+            id = int(raw_input("Enter Customer Id"))
+            pickle_in = open("customer.pickle","rb")
+            list_of_customers = pickle.load(pickle_in)
+            pickle_in.close()
+            c = list_of_customers[id]
+            if c:
+                while 1:
+                    print "1 to BuyProduct"
+                    print "2 to ViewProduct"
+                    print "3 to AddToCart"
+                    print "4 to DeleteFromCart"
+                    print "5 to BuyCart"
+                    print "6 to see history"
+                    print "7 to ViewCart"
+                    #print "7 to MakePayment"
+                    print "0 to exit"
+                    customer_choice = int(raw_input())
+                    if customer_choice == 1:
+                        c.ViewProduct()
+                        c.BuyProduct()
+                    elif customer_choice == 2:
+                        c.ViewProduct()
+                    elif customer_choice == 3:
+                        c.ViewProduct()
+                        c.AddToCart()
+                    elif customer_choice == 4:
+                        c.ViewCart()
+                        c.DeleteFromCart()
+                    elif customer_choice == 5:
+                        c.ViewCart()
+                        c.BuyCart()
+                    elif customer_choice == 6:
+                        c.history()
+                    elif customer_choice == 7:
+                        c.ViewCart()
+                    elif customer_choice == 0:
+                        break
+                    else:
+                        print "Please make valid choice"
+            else:
+                print "Unauthorized Customer"
 
-	    elif choice == 3:
-	        g = Guest()
-	        while 1:
-	            print "1 to ViewProducts"
-	            print "2 to GetRegistered"
-	            print "0 to exit"
-	            guest_choice = int(raw_input())
-	            if guest_choice == 1:
-	                g.ViewProducts()
-	            elif guest_choice == 2:
-	                g.GetRegistered()
-	                break
-	            elif guest_choice == 0:
-	                break
-	            else:
-	                print "Please make valid choice"
-	    elif choice == 0:
-	        break
-	    else:
-	        print "Please make valid choice"
+        elif choice == 3:
+            g = Guest()
+            while 1:
+                print "1 to ViewProducts"
+                print "2 to GetRegistered"
+                print "0 to exit"
+                guest_choice = int(raw_input())
+                if guest_choice == 1:
+                    g.ViewProducts()
+                elif guest_choice == 2:
+                    g.GetRegistered()
+                    break
+                elif guest_choice == 0:
+                    break
+                else:
+                    print "Please make valid choice"
+        elif choice == 0:
+            break
+        else:
+            print "Please make valid choice"
     except:
         print "Please make valid choice"
